@@ -60,12 +60,12 @@ class Traveler
   end
 
   def turn(blocks, lr)
-    location = Location.change(@direction, lr)
+    step = Location.change(@direction, lr)
     @direction.turn(lr)
 
     blocks.times do
-      @current.x += location.x
-      @current.y += location.y
+      @current.x += step.x
+      @current.y += step.y
       unless @visited.add?(@current)
         puts "Hmmm...I've been here before: #{@current}, distance: #{@current.distance}"
       end
@@ -78,9 +78,9 @@ class Traveler
 end
 
 traveler = Traveler.new
-File.read("01.input").split(", ").each do |step|
-  lr = step[0]
-  blocks = step[1..-1].to_i
+File.read("01.input").split(", ").each do |command|
+  lr = command[0]
+  blocks = command[1..-1].to_i
   traveler.turn(blocks, lr)
 end
 
