@@ -1,62 +1,87 @@
-require 'csv'
+require 'set'
 
-module Direction
-
-  NEXT_DIRECTION_AND_SIGN = {
-    "N:R" => ["E", 1],
-    "N:L" => ["W", -1],
-    "E:R" => ["S", -1],
-    "E:L" => ["N", 1],
-    "S:R" => ["W", -1],
-    "S:L" => ["E", 1],
-    "W:R" => ["N", 1],
-    "W:L" => ["S", -1],
-  }
-
-  def self.next(direction, turn)
-    NEXT_DIRECTION_AND_SIGN.fetch("#{direction}:#{turn}").first
+class Direction
+  def initialize
+    @direction = ["N", "E", "S", "W"]
   end
 
-  def self.sign(direction, turn)
-    NEXT_DIRECTION_AND_SIGN.fetch("#{direction}:#{turn}").last
+  def turn(lr)
+    case lr
+    when "R"
+      @direction = @direction.rotate
+    when "L"
+      @direction = @direction.rotate(-1)
+    end
+  end
+
+  def current
+    @direction.first
+  end
+end
+
+Point = Struct.new(:x, :y) do
+  def distance
+    x.abs + y.abs
+  end
+end
+
+module Location
+  def self.change(direction, lr)
+    case direction.current
+    when "N"
+      case lr
+      when "R" then Point.new(1, 0)
+      when "L" then Point.new(-1, 0)
+      end
+    when "E"
+      case lr
+      when "R" then Point.new(0, -1)
+      when "L" then Point.new(0, 1)
+      end
+    when "S"
+      case lr
+      when "R" then Point.new(-1, 0)
+      when "L" then Point.new(1, 0)
+      end
+    when "W"
+      case lr
+      when "R" then Point.new(0, 1)
+      when "L" then Point.new(0, -1)
+      end
+    end
   end
 end
 
 class Traveler
-
-  attr_reader :blocks_away
-
   def initialize
-    @direction = "N"
-    @blocks_away = 0
+    @direction = Direction.new
+    @visited = Set.new
+    @current = Point.new(0, 0)
   end
 
-  def turn_right(blocks)
-    _turn(blocks, "R")
+  def turn(blocks, lr)
+    location = Location.change(@direction, lr)
+    @direction.turn(lr)
+
+    blocks.times do
+      @current.x += location.x
+      @current.y += location.y
+      unless @visited.add?(@current)
+        puts "Hmmm...I've been here before: #{@current}, distance: #{@current.distance}"
+      end
+    end
   end
 
-  def turn_left(blocks)
-    _turn(blocks, "L")
-  end
-
-  def _turn(blocks, turn)
-    @blocks_away += blocks * Direction.sign(@direction, turn)
-    @direction = Direction.next(@direction, turn)
+  def blocks_away
+    @current.distance
   end
 end
 
 traveler = Traveler.new
 File.read("01.input").split(", ").each do |step|
-  direction = step[0]
+  lr = step[0]
   blocks = step[1..-1].to_i
-
-  if direction == "R"
-    traveler.turn_right(blocks)
-  elsif direction == "L"
-    traveler.turn_left(blocks)
-  else
-    raise "Invalid row in input #{row}"
-  end
+  traveler.turn(blocks, lr)
 end
 
-puts traveler.blocks_away
+puts "Final distance #{traveler.blocks_away}"
