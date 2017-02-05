@@ -1,7 +1,11 @@
 def checksum_by_occurrences(string)
-  o = {}
-  string.each_char { |c| o.key?(c) ? o[c] += 1 : o[c] = 1 }
-  o.sort_by { |k, v| [-v, k] }.take(5).map(&:first).join
+  string
+    .each_char
+    .with_object(Hash.new(0)) { |c, h| h.key?(c) ? h[c] += 1 : h[c] = 1 }
+    .sort_by { |k, v| [-v, k] }
+    .take(5)
+    .map(&:first)
+    .join
 end
 
 result = 0
