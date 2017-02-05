@@ -18,9 +18,8 @@ rooms = File.readlines("04.input").map { |line|
   Room.new(encrypted_name, sector_id, checksum)
 }
 
-real_rooms = rooms.select { |r| checksum_by_occurrences(r.encrypted_name) == r.checksum }
-
 # Part 1
+real_rooms = rooms.select { |r| checksum_by_occurrences(r.encrypted_name) == r.checksum }
 sum = real_rooms.map(&:sector_id).reduce(:+)
 puts "Part 1: sum of sector IDs of the real rooms: #{sum}"
 
