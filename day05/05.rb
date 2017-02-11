@@ -25,8 +25,3 @@ end
 
 puts "Part 1 password: #{first_password[0..7]}"
 puts "Part 2 password: #{second_password.join}"
-
-
-
-
-
