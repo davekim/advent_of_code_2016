@@ -6,13 +6,7 @@ def abba?(word)
 end
 
 def find_abas(word)
-  abas = []
-  word.chars.each_cons(3) do |s|
-    if aba?(s)
-      abas << s.join
-    end
-  end
-  abas
+  word.chars.each_cons(3).select { |s| aba?(s) }.map(&:join)
 end
 
 def aba?(s)
