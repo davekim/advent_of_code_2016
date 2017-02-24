@@ -35,6 +35,12 @@ class Screen
   def lit_pixels_count
     @screen.map { |row| row.count { |rc| rc == "#" }}.reduce(0, :+)
   end
+
+  def print
+    @screen.each do |row|
+      puts "#{row.join}"
+    end
+  end
 end
 
 screen = Screen.new
@@ -62,3 +68,5 @@ File.readlines("08.input").each do |line|
 end
 
 puts "Part 1: Number of lit pixels #{screen.lit_pixels_count}"
+puts "Part 2:"
+screen.print
