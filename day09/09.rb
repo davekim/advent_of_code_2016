@@ -11,11 +11,11 @@ File.open("09.input") do |file|
   file.each_char do |c|
     next if c == "\n"
 
-    if c == "(" && length == 0 && times == 0
+    if c == "(" && length == 0
       capture_marker = true
     elsif c != ")" && capture_marker
       marker << c
-    elsif c == ")" && marker.size > 0 && length == 0 && times == 0
+    elsif c == ")" && length == 0
       length, times = marker.split("x").map(&:to_i)
 
       # reset
