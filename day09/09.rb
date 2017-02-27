@@ -1,6 +1,10 @@
-decompressed_file = ""
-File.open("09.input") do |file|
+# input = "(3x3)XYZ"
+# input = "X(8x2)(3x3)ABCY"
+# input = "(27x12)(20x12)(13x14)(7x10)(1x12)A"
+# input = "(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN"
+ input = File.read("09.input")
 
+def decompress(input)
   marker = ""
   capture_marker = false
 
@@ -8,7 +12,9 @@ File.open("09.input") do |file|
   times = 0
   chars_to_repeat = ""
 
-  file.each_char do |c|
+  decompressed_file = ""
+
+  input.each_char do |c|
     next if c == "\n"
 
     if c == "(" && length == 0
@@ -35,6 +41,8 @@ File.open("09.input") do |file|
       decompressed_file << c
     end
   end
+
+  decompressed_file
 end
 
-puts "Part 1: decompressed file length: #{decompressed_file.size}"
+puts "Part 1: decompressed file length: #{decompress(input).size}"
