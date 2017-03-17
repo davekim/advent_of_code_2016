@@ -27,19 +27,17 @@ bots = Hash.new
 transactions = Hash.new
 outputs = Hash.new
 
+VALUE_LINE = /value (\d+) goes to bot (\d+)/
+TRANSACTION_LINE = /bot (\d+) gives low to (bot|output) (\d+) and high to (bot|output) (\d+)/
+
 File.readlines("10.input").each do |line|
   if line.start_with?("value")
-    name = line.split(" ").last.to_i
-    chip = line.split(" ")[1].to_i
+    chip, name = line.match(VALUE_LINE).captures
 
     bots[name] = Bot.new(name) unless bots[name]
-    bots[name].give(chip)
+    bots[name].give(chip.to_i)
   elsif line.start_with?("bot")
-    giver = line.split(" ")[1].to_i
-    low_type = line.split(" ")[5]
-    low_taker = line.split(" ")[6].to_i
-    high_type = line.split(" ")[10]
-    high_taker = line.split(" ")[11].to_i
+    giver, low_type, low_taker, high_type, high_taker = line.match(TRANSACTION_LINE).captures
 
     transactions[giver] = Transaction.new(giver, low_type, low_taker, high_type, high_taker)
 
@@ -89,4 +87,4 @@ until transactions.empty? do
   end
 end
 
-puts "Part 2: Multiplying chips of output 1,2,3: #{outputs[0].chip * outputs[1].chip * outputs[2].chip}"
+puts "Part 2: Multiplying chips of output 1,2,3: #{outputs["0"].chip.to_i * outputs["1"].chip.to_i * outputs["2"].chip.to_i}"
