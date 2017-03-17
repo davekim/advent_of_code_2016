@@ -87,4 +87,4 @@ until transactions.empty? do
   end
 end
 
-puts "Part 2: Multiplying chips of output 1,2,3: #{outputs["0"].chip.to_i * outputs["1"].chip.to_i * outputs["2"].chip.to_i}"
+puts "Part 2: Multiplying chips of output 1,2,3: #{outputs["0"].chip * outputs["1"].chip * outputs["2"].chip}"
